@@ -1,5 +1,6 @@
 // using this node js tool for hard drive path solution (macOS WinOS both)
 const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 const config = {
     // Relative Path to project directory
@@ -19,12 +20,19 @@ const config = {
                 use: {
                     loader: "babel-loader",
                     options: {
-                        presets: ['@babel/preset-env']
+                        presets: [
+                            '@babel/preset-env',
+                        ],
                     }
                 }
             }
         ]
-    }
+    },
+    plugins: [
+        new HtmlWebpackPlugin({
+            template: './src/index.html',
+        }),
+    ],
 };
 
 module.exports = config;
