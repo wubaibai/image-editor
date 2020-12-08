@@ -3,6 +3,8 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 const config = {
+    // Generate source map for debugging
+    devtool: 'cheap-module-source-map',
     // Relative Path to project directory
     entry: './src/index.js',
     // Relative to hard drive directory
