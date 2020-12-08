@@ -1,6 +1,7 @@
 // using this node js tool for hard drive path solution (macOS WinOS both)
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 const config = {
     // Generate source map for debugging
@@ -32,6 +33,7 @@ const config = {
         ]
     },
     plugins: [
+        new CleanWebpackPlugin(),
         new HtmlWebpackPlugin({
             template: './src/index.html',
         }),
