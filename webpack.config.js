@@ -15,6 +15,7 @@ const config = {
         // 意思是在這個專案資料夾下的 build folder 建立 bundle.js 檔案作為 output
         path: path.resolve(__dirname, 'build'),
         filename: 'bundle.js',
+        publicPath: '/',
     },
     module: {
         rules: [
