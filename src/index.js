@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-const Content = <div>hello</div>;
+const Content = <div>hellobbbb</div>;
 
 ReactDOM.render(
 	Content,

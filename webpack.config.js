@@ -1,5 +1,6 @@
 // using this node js tool for hard drive path solution (macOS WinOS both)
 const path = require('path');
+const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
@@ -8,7 +9,7 @@ const config = {
     // Generate source map for debugging
     devtool: 'cheap-module-source-map',
     // Relative Path to project directory
-    entry: './src/index.js',
+    entry: ['webpack-hot-middleware/client', './src/index.js'],
     // Relative to hard drive directory
     output: {
         // __dirname 是 node js 保留字就是該專案資料夾。
@@ -36,6 +37,7 @@ const config = {
     },
     plugins: [
         new CleanWebpackPlugin(),
+		new webpack.HotModuleReplacementPlugin(),
         new HtmlWebpackPlugin({
             template: './src/index.html',
         }),
