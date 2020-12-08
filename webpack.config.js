@@ -10,6 +10,20 @@ const config = {
         // 意思是在這個專案資料夾下的 build folder 建立 bundle.js 檔案作為 output
         path: path.resolve(__dirname, 'build'),
         filename: 'bundle.js',
+    },
+    module: {
+        rules: [
+            {
+                test: /\.js?$/,
+                exclude: /node_modules/,
+                use: {
+                    loader: "babel-loader",
+                    options: {
+                        presets: ['@babel/preset-env']
+                    }
+                }
+            }
+        ]
     }
 };
 
