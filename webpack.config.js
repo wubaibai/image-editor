@@ -4,6 +4,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 const config = {
+    mode: 'development',
     // Generate source map for debugging
     devtool: 'cheap-module-source-map',
     // Relative Path to project directory
