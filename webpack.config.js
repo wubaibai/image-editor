@@ -31,7 +31,15 @@ const config = {
                             '@babel/preset-react',
                         ],
                         plugins: [
-                            'react-hot-loader/babel'
+                            'react-hot-loader/babel',
+                            [
+                                'module-resolver', {
+                                    root: ['./src'],
+                                    alias: {
+                                        components: './src/components',
+                                    }
+                                }
+                            ],
                         ]
                     }
                 }
