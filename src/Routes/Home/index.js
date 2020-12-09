@@ -6,5 +6,4 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import Content from 'components/organisms/Content';
-
 export default hot(Content);
