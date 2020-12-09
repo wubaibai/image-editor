@@ -3,7 +3,4 @@ import ReactDOM from 'react-dom';
 
 import Home from 'Routes/Home';
 
-ReactDOM.render(
-	<Home />,
-	document.getElementById('content'),
-);
+ReactDOM.render(<Home />, document.getElementById('content'));
