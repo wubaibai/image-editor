@@ -9,7 +9,7 @@ const config = {
     // Generate source map for debugging
     devtool: 'cheap-module-source-map',
     // Relative Path to project directory
-    entry: ['webpack-hot-middleware/client', './src/index.js'],
+    entry: ['webpack-hot-middleware/client', 'react-hot-loader/patch', './src/index.js'],
     // Relative to hard drive directory
     output: {
         // __dirname 是 node js 保留字就是該專案資料夾。
@@ -30,6 +30,9 @@ const config = {
                             '@babel/preset-env',
                             '@babel/preset-react',
                         ],
+                        plugins: [
+                            'react-hot-loader/babel'
+                        ]
                     }
                 }
             }
@@ -37,11 +40,16 @@ const config = {
     },
     plugins: [
         new CleanWebpackPlugin(),
-		new webpack.HotModuleReplacementPlugin(),
+        new webpack.HotModuleReplacementPlugin(),
         new HtmlWebpackPlugin({
             template: './src/index.html',
         }),
     ],
+    resolve: {
+        alias: {
+            'react-dom': '@hot-loader/react-dom',
+        },
+    },
 };
 
 module.exports = config;

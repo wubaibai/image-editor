@@ -1,9 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-const Content = <div>hellobbbb</div>;
+import Content from './content';
 
 ReactDOM.render(
-	Content,
+	<Content />,
 	document.getElementById('content'),
 );
