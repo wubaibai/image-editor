@@ -37,6 +37,7 @@ const config = {
                                     root: ['./src'],
                                     alias: {
                                         components: './src/components',
+                                        routes: './src/routes',
                                     }
                                 }
                             ],

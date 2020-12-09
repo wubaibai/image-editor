@@ -1,9 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import Content from './content';
+import Home from 'Routes/Home';
 
 ReactDOM.render(
-	<Content />,
+	<Home />,
 	document.getElementById('content'),
 );

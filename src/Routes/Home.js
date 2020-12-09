@@ -5,6 +5,6 @@ import { hot } from 'react-hot-loader/root';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-const Content = () => <div>Hello</div>;
+import Content from 'components/organisms/Content';
 
 export default hot(Content);
