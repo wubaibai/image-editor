@@ -1,5 +1,5 @@
 {
-  "name": "skitch",
+  "name": "image-editor",
   "version": "1.0.0",
   "description": "create web version skitch by webpack",
   "main": "index.js",
