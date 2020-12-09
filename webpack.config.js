@@ -13,8 +13,8 @@ const config = {
     // Relative to hard drive directory
     output: {
         // __dirname 是 node js 保留字就是該專案資料夾。
-        // 意思是在這個專案資料夾下的 build folder 建立 bundle.js 檔案作為 output
-        path: path.resolve(__dirname, 'build'),
+        // 意思是在這個專案資料夾下的 _public folder 建立 bundle.js 檔案作為 output
+        path: path.resolve(__dirname, '_public'),
         filename: 'bundle.js',
         publicPath: '/',
     },
