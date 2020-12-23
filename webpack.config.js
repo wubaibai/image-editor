@@ -30,6 +30,41 @@ const config = {
 					options: babelLoaderOptions,
 				},
 			},
+			{
+				test: /\.css$/,
+				include: path.join(__dirname, 'src'),
+				use: [
+					'style-loader',
+					{
+						loader: 'css-loader',
+						options: {
+							modules: {
+								exportLocalsConvention: 'camelCase',
+								localIdentName: '[name]__[local]___[hash:base64:5]',
+							},
+							importLoaders: 1,
+							sourceMap: true,
+						},
+					},
+					{
+						loader: 'postcss-loader',
+						options: {
+							postcssOptions: {
+								plugins: [
+									'postcss-import',
+									[
+										'postcss-preset-env',
+										{
+											stage: 0,
+											preserve: false,
+										},
+									],
+								],
+							},
+						},
+					},
+				],
+			},
 		],
 	},
 	plugins: [
