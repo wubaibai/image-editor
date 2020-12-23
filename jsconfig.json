@@ -7,7 +7,7 @@
         "baseUrl": "./",
         "paths": {
             "components/*": ["src/components/*"],
-            "routes/*": ["src/route/*"]
+            "routes/*": ["src/routes/*"]
         }
     }
 }
