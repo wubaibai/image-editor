@@ -13,7 +13,11 @@ app.use(
 	}),
 );
 
-app.use(require('webpack-hot-middleware')(compiler));
+app.use(
+	require('webpack-hot-middleware')(compiler, {
+		noInfo: true,
+	}),
+);
 
 // Serve the files on port 3000.
 app.listen(3000, err => {
