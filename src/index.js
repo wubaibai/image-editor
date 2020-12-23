@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import Home from 'routes/Home';
+import App from 'routes/App';
 
-ReactDOM.render(<Home />, document.getElementById('content'));
+ReactDOM.render(<App />, document.getElementById('content'));
