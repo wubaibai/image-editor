@@ -1,0 +1,41 @@
+.app {
+	display: flex;
+	flex-direction: column;
+	align-content: stretch;
+	height: 100vh;
+}
+
+.header {
+	flex: 0;
+}
+
+.container {
+	display: flex;
+	align-items: stretch;
+	flex: 1;
+}
+
+.aside {
+	flex: 0;
+	border-right: #ddd 1px solid;
+}
+
+.main {
+	display: flex;
+	flex-direction: column;
+	flex: 1;
+
+	& > * {
+		width: 100%;
+	}
+
+	& .editor {
+		flex: 1;
+	}
+
+	& .information {
+		flex: 0;
+		border-top: #ddd 1px solid;
+		padding: 8px;
+	}
+}
