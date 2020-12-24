@@ -1,9 +1,11 @@
 import React, { useRef } from 'react';
+import { connect } from 'react-redux';
 
+import { addImage } from 'actions/image';
 import Button from 'components/atoms/Button';
 import style from './index.css';
 
-const Header = () => {
+const Header = ({ addImageAction }) => {
 	const fileInputRef = useRef();
 
 	const readFile = input => {
@@ -13,7 +15,11 @@ const Header = () => {
 				const img = new Image();
 				img.src = e.target.result;
 				img.onload = () => {
-					console.log(img);
+					addImageAction({
+						data: img,
+						width: img.width,
+						height: img.height,
+					});
 				};
 			};
 			reader.readAsDataURL(input.files[0]);
@@ -40,4 +46,6 @@ const Header = () => {
 	);
 };
 
-export default Header;
+export default connect(null, {
+	addImageAction: addImage,
+})(Header);
