@@ -4,3 +4,11 @@
 	align-items: center;
 	height: 100%;
 }
+
+.canvas {
+	max-width: 960px;
+	max-height: 480px;
+	border: #ddd 1px solid;
+	overflow: hidden;
+	line-height: 0;
+}
