@@ -9,6 +9,8 @@ module.exports = {
 				alias: {
 					components: './src/components',
 					routes: './src/routes',
+					actions: './src/actions',
+					reducers: './src/reducers',
 				},
 			},
 		],

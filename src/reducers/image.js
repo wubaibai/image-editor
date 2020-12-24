@@ -1,4 +1,4 @@
-import { ADD_IMAGE } from '../actions/types';
+import { ADD_IMAGE } from 'actions/types';
 
 const initialState = {
 	data: undefined,
