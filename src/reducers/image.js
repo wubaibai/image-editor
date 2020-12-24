@@ -1,3 +1,5 @@
+import { ADD_IMAGE } from '../actions/types';
+
 const initialState = {
 	data: undefined,
 	width: 0,
@@ -5,16 +7,17 @@ const initialState = {
 };
 
 const imageReducer = (state = initialState, action) => {
-	if (action.type === 'ADD_IMAGE') {
-		return {
-			...state,
-			data: action.payload.data,
-			width: action.payload.width,
-			height: action.payload.height,
-		};
+	switch (action.type) {
+		case ADD_IMAGE:
+			return {
+				...state,
+				data: action.payload.data,
+				width: action.payload.width,
+				height: action.payload.height,
+			};
+		default:
+			return state;
 	}
-
-	return state;
 };
 
 export default imageReducer;
