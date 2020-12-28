@@ -1,5 +1,18 @@
 module.exports = {
-	presets: ['@babel/preset-env', '@babel/preset-react'],
+	presets: [
+		[
+			'@babel/preset-env',
+			{
+				loose: true,
+				useBuiltIns: 'usage',
+				corejs: 3,
+				targets: {
+					node: 'current',
+				},
+			},
+		],
+		'@babel/preset-react',
+	],
 	plugins: [
 		'react-hot-loader/babel',
 		[
