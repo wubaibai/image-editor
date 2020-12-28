@@ -5,10 +5,17 @@
 	height: 100%;
 }
 
-.canvas {
+.canvas-wrap {
+	position: relative;
 	max-width: 960px;
 	max-height: 480px;
 	border: #ddd 1px solid;
 	overflow: hidden;
 	line-height: 0;
+}
+
+.markers {
+	position: absolute;
+	top: 0;
+	left: 0;
 }

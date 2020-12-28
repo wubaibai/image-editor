@@ -1,6 +1,9 @@
 import React, { useEffect, useRef } from 'react';
+import { connect } from 'react-redux';
 
-const Canvas = ({ image, maxW = 960, maxH = 480 }) => {
+import { setEditorSize } from 'actions/editor';
+
+const Canvas = ({ image, maxW = 960, maxH = 480, setEditorSizeAction }) => {
 	const canvasRef = useRef();
 	const contextRef = useRef();
 
@@ -28,6 +31,10 @@ const Canvas = ({ image, maxW = 960, maxH = 480 }) => {
 
 		if (image.data) {
 			const [newW, newH] = resize(image);
+			setEditorSizeAction({
+				width: newW,
+				height: newH,
+			});
 			canvasRef.current.width = newW;
 			canvasRef.current.height = newH;
 			contextRef.current.drawImage(image.data, 0, 0, newW, newH);
@@ -37,4 +44,6 @@ const Canvas = ({ image, maxW = 960, maxH = 480 }) => {
 	return <canvas ref={canvasRef} />;
 };
 
-export default Canvas;
+export default connect(null, {
+	setEditorSizeAction: setEditorSize,
+})(Canvas);
