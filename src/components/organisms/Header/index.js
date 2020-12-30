@@ -1,18 +1,27 @@
 import React, { useRef, useState } from 'react';
-import { useSelector } from 'react-redux';
 import { saveAs } from 'file-saver';
 
 import { addImage } from 'actions/image';
 import Button from 'components/atoms/Button';
 import Modal from 'components/molecules/Modal';
 import style from './index.css';
-import useActions from '../../../utils/useAction';
+import useRedux from 'utils/hooks/useRedux';
 
 const Header = () => {
 	const fileInputRef = useRef();
 	const [isExportModal, setIsExportModal] = useState(false);
-	const image = useSelector(state => state.image);
-	const addImageAction = useActions(addImage);
+
+	/**
+	 * get data from store and bindActionCreators
+	 */
+	const mapHooksToState = state => ({
+		image: state.image,
+	});
+	const [{ image }, { addImage: addImageAction }] = useRedux(mapHooksToState, { addImage });
+
+	/**
+	 * set component state
+	 */
 	const [mimeType, setMimeType] = useState('image/jpeg');
 	const [quality, setQuality] = useState(1);
 
