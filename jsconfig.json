@@ -9,7 +9,8 @@
             "components/*": ["src/components/*"],
             "routes/*": ["src/routes/*"],
             "actions/*": ["src/actions/*"],
-            "reducers/*": ["src/reducers/*"]
+            "reducers/*": ["src/reducers/*"],
+            "store/*": ["src/store/*"]
         }
     }
 }
