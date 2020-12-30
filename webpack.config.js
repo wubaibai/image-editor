@@ -75,9 +75,13 @@ const config = {
 		}),
 	],
 	resolve: {
+		modules: ['node_modules'],
 		alias: {
 			'react-dom': '@hot-loader/react-dom',
 		},
+	},
+	devServer: {
+		hot: true,
 	},
 };
 

@@ -10,7 +10,8 @@
             "routes/*": ["src/routes/*"],
             "actions/*": ["src/actions/*"],
             "reducers/*": ["src/reducers/*"],
-            "store/*": ["src/store/*"]
+            "store/*": ["src/store/*"],
+            "utils/*": ["src/utils/*"]
         }
     }
 }

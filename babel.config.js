@@ -25,6 +25,7 @@ module.exports = {
 					actions: './src/actions',
 					reducers: './src/reducers',
 					store: './src/store',
+					utils: './src/utils',
 				},
 			},
 		],

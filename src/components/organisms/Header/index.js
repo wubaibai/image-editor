@@ -1,13 +1,16 @@
 import React, { useRef } from 'react';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { saveAs } from 'file-saver';
 
 import { addImage } from 'actions/image';
 import Button from 'components/atoms/Button';
 import style from './index.css';
+import useActions from '../../../utils/useAction';
 
-const Header = ({ image, addImageAction }) => {
+const Header = () => {
 	const fileInputRef = useRef();
+	const image = useSelector(state => state.image);
+	const addImageAction = useActions(addImage);
 
 	const readFile = input => {
 		if (input.files && input.files[0]) {
@@ -90,10 +93,4 @@ const Header = ({ image, addImageAction }) => {
 	);
 };
 
-const mapStateToProps = state => ({
-	image: state.image,
-});
-
-export default connect(mapStateToProps, {
-	addImageAction: addImage,
-})(Header);
+export default Header;
