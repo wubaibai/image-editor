@@ -1,5 +1,6 @@
 const express = require('express');
 const webpack = require('webpack');
+const open = require('open');
 const config = require('./webpack.config.js');
 
 const app = express();
@@ -20,10 +21,14 @@ app.use(
 );
 
 // Serve the files on port 3000.
+const port = 3000;
 app.listen(3000, err => {
 	if (err) {
 		return console.error(err);
 	}
 
-	return console.log('Example app listening on port 3000!\n');
+	console.info(`Example app listening on port ${port}!\n`);
+	open(`http://localhost:${port}`);
+
+	return true;
 });
