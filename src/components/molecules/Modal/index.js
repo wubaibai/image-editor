@@ -4,6 +4,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import classnames from 'classnames';
+import CloseIcon from '@material-ui/icons/Close';
 
 import style from './index.css';
 
@@ -16,7 +17,7 @@ const Modal = ({ visible = false, title = '', content = '', actions = '', onDism
 						<div className={style.header}>
 							<div className={style.title}>{title}</div>
 							<div className={style.close} onClick={onDismiss}>
-								X
+								<CloseIcon />
 							</div>
 						</div>
 						<div className={style.content}>{content}</div>
