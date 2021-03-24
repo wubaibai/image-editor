@@ -91,7 +91,7 @@ const Header = () => {
 					saveAs(blob, 'exported');
 				},
 				mimeType,
-				quality,
+				mimeType === 'image/jpeg' ? quality : 1,
 			);
 		} catch (error) {
 			console.log(error);
@@ -122,22 +122,24 @@ const Header = () => {
 						</Select>
 					</FormControl>
 				</div>
-				<div className={style['export-controls']}>
-					<FormControl>
-						<InputLabel id="export-quality">品質</InputLabel>
-						<Select
-							labelId="export-quality"
-							value={quality}
-							onChange={event => setQuality(event.target.value)}
-						>
-							<MenuItem value="1">100</MenuItem>
-							<MenuItem value="0.9">90</MenuItem>
-							<MenuItem value="0.8">80</MenuItem>
-							<MenuItem value="0.7">70</MenuItem>
-							<MenuItem value="0.6">60</MenuItem>
-						</Select>
-					</FormControl>
-				</div>
+				{mimeType === 'image/jpeg' && (
+					<div className={style['export-controls']}>
+						<FormControl>
+							<InputLabel id="export-quality">品質</InputLabel>
+							<Select
+								labelId="export-quality"
+								value={quality}
+								onChange={event => setQuality(event.target.value)}
+							>
+								<MenuItem value="1">100</MenuItem>
+								<MenuItem value="0.9">90</MenuItem>
+								<MenuItem value="0.8">80</MenuItem>
+								<MenuItem value="0.7">70</MenuItem>
+								<MenuItem value="0.6">60</MenuItem>
+							</Select>
+						</FormControl>
+					</div>
+				)}
 			</div>
 		);
 		const actions = (
