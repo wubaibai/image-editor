@@ -1,14 +1,21 @@
 import React, { useRef, useState } from 'react';
 import { saveAs } from 'file-saver';
-import { Select, MenuItem, FormControl, InputLabel } from '@material-ui/core';
+import { Button, Select, MenuItem, FormControl, InputLabel } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
 
 import { addImage } from 'actions/image';
-import Button from 'components/atoms/Button';
 import Modal from 'components/molecules/Modal';
 import useRedux from 'utils/hooks/useRedux';
 import style from './index.css';
 
+const useStyles = makeStyles(theme => ({
+	button: {
+		margin: theme.spacing(1),
+	},
+}));
+
 const Header = () => {
+	const classes = useStyles();
 	const fileInputRef = useRef();
 	const [isExportModal, setIsExportModal] = useState(false);
 
@@ -133,7 +140,11 @@ const Header = () => {
 				</div>
 			</div>
 		);
-		const actions = <Button onClick={onExportConfirm}>Export</Button>;
+		const actions = (
+			<Button variant="contained" color="primary" onClick={onExportConfirm}>
+				Export
+			</Button>
+		);
 
 		return (
 			<Modal
@@ -150,9 +161,23 @@ const Header = () => {
 		<div className={style.header}>
 			<div>Image Editor</div>
 			<div className={style.actions}>
-				<Button onClick={onImportClick}>Import</Button>
+				<Button
+					className={classes.button}
+					variant="contained"
+					color="primary"
+					onClick={onImportClick}
+				>
+					Import
+				</Button>
 				<input type="file" hidden ref={fileInputRef} onChange={onFileInputChanged} />
-				<Button onClick={onExportClick}>Export</Button>
+				<Button
+					className={classes.button}
+					variant="contained"
+					color="primary"
+					onClick={onExportClick}
+				>
+					Export
+				</Button>
 				{renderExportModal()}
 			</div>
 		</div>
