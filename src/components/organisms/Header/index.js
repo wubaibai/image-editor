@@ -1,11 +1,12 @@
 import React, { useRef, useState } from 'react';
 import { saveAs } from 'file-saver';
+import { Select, MenuItem, FormControl, InputLabel } from '@material-ui/core';
 
 import { addImage } from 'actions/image';
 import Button from 'components/atoms/Button';
 import Modal from 'components/molecules/Modal';
-import style from './index.css';
 import useRedux from 'utils/hooks/useRedux';
+import style from './index.css';
 
 const Header = () => {
 	const fileInputRef = useRef();
@@ -101,7 +102,35 @@ const Header = () => {
 	const renderExportModal = () => {
 		const content = (
 			<div>
-				MIME Type: {mimeType}, Quality: {quality}
+				<div className={style['export-controls']}>
+					<FormControl>
+						<InputLabel id="export-mime-type">匯出格式</InputLabel>
+						<Select
+							labelId="export-mime-type"
+							value={mimeType}
+							onChange={event => setMimeType(event.target.value)}
+						>
+							<MenuItem value="image/jpeg">image/jpeg</MenuItem>
+							<MenuItem value="image/png">image/png</MenuItem>
+						</Select>
+					</FormControl>
+				</div>
+				<div className={style['export-controls']}>
+					<FormControl>
+						<InputLabel id="export-quality">品質</InputLabel>
+						<Select
+							labelId="export-quality"
+							value={quality}
+							onChange={event => setQuality(event.target.value)}
+						>
+							<MenuItem value="1">100</MenuItem>
+							<MenuItem value="0.9">90</MenuItem>
+							<MenuItem value="0.8">80</MenuItem>
+							<MenuItem value="0.7">70</MenuItem>
+							<MenuItem value="0.6">60</MenuItem>
+						</Select>
+					</FormControl>
+				</div>
 			</div>
 		);
 		const actions = <Button onClick={onExportConfirm}>Export</Button>;
