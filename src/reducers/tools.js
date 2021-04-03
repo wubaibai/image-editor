@@ -14,6 +14,7 @@ const initialState = {
 	attributes: {
 		fillColor: undefined,
 		borderColor: '#FF0000',
+		strokeWidth: 2,
 	},
 };
 
