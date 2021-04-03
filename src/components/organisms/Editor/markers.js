@@ -1,10 +1,9 @@
-import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react';
+import React, { useRef, useEffect, useCallback, useMemo } from 'react';
 import _ from 'lodash';
 
 import { addMarker, updateMarker } from 'actions/markers';
 import useRedux from 'utils/hooks/useRedux';
 import style from './index.css';
-import { useSelector } from 'react-redux';
 
 const getCoordinates = (element, event) => {
     if (!element) {
