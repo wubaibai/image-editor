@@ -20,8 +20,8 @@ const getCoordinates = (element, event) => {
 
 const Markers = () => {
     const isPainting = useRef(false);
+    const markerId = useRef(undefined);
 	const markersRef = useRef();
-	const [markerId, setMarkerId] = useState(undefined);
 	const mapHooksToState = state => ({
 		markers: state.markers,
         editor: state.editor,
@@ -35,12 +35,11 @@ const Markers = () => {
         console.log('startPaint');
         isPainting.current = true;
 
-		const newId = new Date().getTime();
-        setMarkerId(newId);
+		markerId.current = new Date().getTime();
 		const coordinates = getCoordinates(markersRef.current, event);
 		if (coordinates) {
 			addMarkerAction({
-				id: newId,
+				id: markerId.current,
 				type: 'rectangle',
 				coordinates,
 			});
@@ -52,7 +51,23 @@ const Markers = () => {
             return;
         }
 
+        const coordinates = getCoordinates(markersRef.current, event);
+        if (!coordinates) {
+            return;
+        }
+
         console.log('paint');
+        updateMarkerAction({
+            id: markerId.current,
+            data: {
+                position: {
+                    end: {
+                        x: coordinates.x,
+                        y: coordinates.y,
+                    },
+                },
+            },
+        });
     }, []);
 
 	const exitPaint = useCallback(event => {
@@ -64,19 +79,21 @@ const Markers = () => {
         }
 
         isPainting.current = false;
-        if (markerId) {
-            updateMarkerAction({
-                id: markerId,
-                data: {
-                    position: {
-                        end: {
-                            x: coordinates.x,
-                            y: coordinates.y,
-                        },
+        if (!markerId.current) {
+            return;
+        }
+        
+        updateMarkerAction({
+            id: markerId.current,
+            data: {
+                position: {
+                    end: {
+                        x: coordinates.x,
+                        y: coordinates.y,
                     },
                 },
-            });
-        }
+            },
+        });
     }, []);
 
 	useEffect(() => {
@@ -84,7 +101,7 @@ const Markers = () => {
             return;
         }
 
-        const throttledPaint = _.throttle(paint, 350);
+        const throttledPaint = _.throttle(paint, 100);
 		markersRef.current.addEventListener('mousedown', startPaint);
         markersRef.current.addEventListener('mousemove', throttledPaint);
         markersRef.current.addEventListener('mouseup', exitPaint);
