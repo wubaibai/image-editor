@@ -1,15 +1,18 @@
 import { SET_SELECTED_TOOL } from 'actions/types';
+import { SHAPES, TOOLS } from 'utils/const';
 
 const initialState = {
-	selected: '',
+	selected: TOOLS.SHAPE,
 	settings: {
-		arrow: {},
-		shape: {},
-		text: {},
-		painter: {
+		[TOOLS.ARROW]: {},
+		[TOOLS.SHAPE]: {
+			selected: SHAPES.RECTANGLE,
+		},
+		[TOOLS.TEXT]: {},
+		[TOOLS.PAINTER]: {
 			size: 6,
 		},
-		sizer: {},
+		[TOOLS.SIZER]: {},
 	},
 	attributes: {
 		fillColor: undefined,

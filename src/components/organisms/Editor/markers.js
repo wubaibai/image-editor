@@ -1,9 +1,10 @@
-import React, { useState, useRef, useEffect, useCallback } from 'react';
+import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import _ from 'lodash';
 
 import { addMarker, updateMarker } from 'actions/markers';
 import useRedux from 'utils/hooks/useRedux';
 import style from './index.css';
+import { useSelector } from 'react-redux';
 
 const getCoordinates = (element, event) => {
     if (!element) {
@@ -19,17 +20,19 @@ const getCoordinates = (element, event) => {
 };
 
 const Markers = () => {
-    const isPainting = useRef(false);
-    const markerId = useRef(undefined);
-	const markersRef = useRef();
 	const mapHooksToState = state => ({
 		markers: state.markers,
         editor: state.editor,
+        tools: state.tools,
 	});
 	const [
-		{ markers, editor },
+		{ tools, markers, editor },
 		{ addMarker: addMarkerAction, updateMarker: updateMarkerAction },
 	] = useRedux(mapHooksToState, { addMarker, updateMarker });
+    const isPainting = useRef(false);
+    const markerId = useRef(undefined);
+	const markersRef = useRef();
+    const markersType = useMemo(() => tools.settings[tools.selected].selected);
 
 	const startPaint = useCallback(event => {
         console.log('startPaint');
@@ -40,7 +43,7 @@ const Markers = () => {
 		if (coordinates) {
 			addMarkerAction({
 				id: markerId.current,
-				type: 'rectangle',
+				type: markersType,
 				coordinates,
 			});
 		}
