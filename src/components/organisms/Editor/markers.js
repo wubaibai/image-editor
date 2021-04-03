@@ -5,6 +5,19 @@ import { addMarker, updateMarker } from 'actions/markers';
 import useRedux from 'utils/hooks/useRedux';
 import style from './index.css';
 
+const getCoordinates = (element, event) => {
+    if (!element) {
+        return undefined;
+    }
+
+    const markersPosition = element.getBoundingClientRect();
+
+    return {
+        x: event.pageX - markersPosition.left,
+        y: event.pageY - markersPosition.top,
+    };
+};
+
 const Markers = () => {
     const isPainting = useRef(false);
 	const markersRef = useRef();
@@ -21,6 +34,17 @@ const Markers = () => {
 	const startPaint = useCallback(event => {
         console.log('startPaint');
         isPainting.current = true;
+
+		const newId = new Date().getTime();
+        setMarkerId(newId);
+		const coordinates = getCoordinates(markersRef.current, event);
+		if (coordinates) {
+			addMarkerAction({
+				id: newId,
+				type: 'rectangle',
+				coordinates,
+			});
+		}
 	}, []);
 
     const paint = useCallback(event => {
@@ -33,7 +57,26 @@ const Markers = () => {
 
 	const exitPaint = useCallback(event => {
         console.log('exitPaint');
-		isPainting.current = false;
+
+        const coordinates = getCoordinates(markersRef.current, event);
+        if (!coordinates) {
+            return;
+        }
+
+        isPainting.current = false;
+        if (markerId) {
+            updateMarkerAction({
+                id: markerId,
+                data: {
+                    position: {
+                        end: {
+                            x: coordinates.x,
+                            y: coordinates.y,
+                        },
+                    },
+                },
+            });
+        }
     }, []);
 
 	useEffect(() => {
