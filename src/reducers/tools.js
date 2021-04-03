@@ -15,8 +15,8 @@ const initialState = {
 		[TOOLS.SIZER]: {},
 	},
 	attributes: {
-		fillColor: undefined,
-		borderColor: '#FF0000',
+		fill: 'transparent',
+		stroke: '#FF0000',
 		strokeWidth: 2,
 	},
 };

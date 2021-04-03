@@ -1,24 +1,22 @@
 import { ADD_MARKER, UPDATE_MARKER } from './types';
 
-export const addMarker = ({ id, type, coordinates }) => {
+export const addMarker = ({ id, type, style, coordinates }) => {
 	return {
 		type: ADD_MARKER,
 		payload: {
 			id,
 			data: {
 				type,
-				style: {},
+				style,
 				position: {
 					start: {
 						x: coordinates.x,
 						y: coordinates.y,
 					},
 					end: {
-						x: undefined,
-						y: undefined,
+						x: coordinates.x,
+						y: coordinates.y,
 					},
-					width: undefined,
-					height: undefined,
 				},
 			},
 		},
