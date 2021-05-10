@@ -40,8 +40,9 @@ export const Boundary = props => {
 			data-id={props['data-id']}
 			data-type={props['data-type']}
 		>
-			<g ref={groupRef}>{props.children}</g>
 			{props.selected && <path d={pathD} strokeWidth="1" stroke="rgba(63,81,181,0.5)" fill="transparent" />}
+			{props.fill && <path d={pathD} fill={props.fill} />}
+			<g ref={groupRef}>{props.children}</g>
 		</g>
 	);
 };
