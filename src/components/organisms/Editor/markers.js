@@ -2,9 +2,9 @@ import React, { useRef, useEffect, useCallback, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import _ from 'lodash';
 
-import SVG, { Rect } from 'components/atoms/SVG';
-import { SHAPES } from 'utils/const';
-import { addMarker, updateMarker } from 'actions/markers';
+import SVG, { Rect, Text, Boundary } from 'components/atoms/SVG';
+import { MARKERS } from 'utils/const';
+import { addMarker, updateMarker, setSelectedMarker } from 'actions/markers';
 import useRedux from 'utils/hooks/useRedux';
 import style from './index.css';
 
@@ -23,23 +23,46 @@ const getCoordinates = (element, event) => {
 
 const renderMarkers = (markers) => {
 	if (_.isEmpty(markers.list)) {
-		return null
+		return null;
 	}
 
+	const selectedId = markers.selected;
 	return markers.list.map((id) => {
 		const mark = markers.data[id];
 
-		if (mark.type === SHAPES.RECTANGLE) {
+		if (mark.type === MARKERS.RECTANGLE) {
 			return (
 				<Rect
+					key={id}
+					selected={id === selectedId}
 					height={mark.position.end.y - mark.position.start.y}
 					width={mark.position.end.x - mark.position.start.x}
 					x={mark.position.start.x}
 					y={mark.position.start.y}
 					fill={mark.style.fill}
 					stroke={mark.style.stroke}
-					stroke-width={mark.style.strokeWidth}
+					strokeWidth={mark.style.strokeWidth}
+					data-id={id}
+					data-type={MARKERS.RECTANGLE}
 				/>
+			);
+		} else if (mark.type === MARKERS.TEXT) {
+			return (
+				<Boundary
+					key={id}
+					selected={id === selectedId}
+					x={mark.position.start.x}
+					y={mark.position.start.y}
+					data-id={id}
+					data-type={MARKERS.TEXT}
+					fill={mark.style.fill}
+				>
+					<Text 
+						fill={mark.style.fillText}
+					>
+						Sample Text
+					</Text>
+				</Boundary>
 			);
 		}
 
@@ -51,18 +74,25 @@ const Markers = () => {
 	const mapHooksToState = state => ({
 		markers: state.markers,
 		editor: state.editor,
-		tools: state.tools,
 	});
 	const [
-		{ tools, markers, editor },
-		{ addMarker: addMarkerAction, updateMarker: updateMarkerAction },
-	] = useRedux(mapHooksToState, { addMarker, updateMarker });
+		{ markers, editor },
+		{ addMarker: addMarkerAction, updateMarker: updateMarkerAction, setSelectedMarker: setSelectedMarkerAction },
+	] = useRedux(mapHooksToState, { addMarker, updateMarker, setSelectedMarker });
 	const isPainting = useRef(false);
 	const markerId = useRef(undefined);
 	const markersRef = useRef();
-	const markersType = useMemo(() => tools.settings[tools.selected].selected);
+	const toolsType = useSelector(state => state.tools.selected);
+	const toolsAttributes = useSelector(state => state.tools.attributes);
+	const markersType = useSelector(state => state.tools.settings[state.tools.selected].selected)
+	const paintingTypes = ['shape'];
+	const clickTypes = ['text'];
 
 	const startPaint = useCallback(event => {
+		if (!_.includes(paintingTypes, toolsType)) {
+			return;
+		}
+
 		console.log('startPaint');
 		isPainting.current = true;
 
@@ -73,13 +103,13 @@ const Markers = () => {
 				id: markerId.current,
 				type: markersType,
 				coordinates,
-				style: tools.attributes,
+				style: toolsAttributes,
 			});
 		}
-	}, []);
+	}, [toolsType, markersType, toolsAttributes]);
 
 	const paint = useCallback(event => {
-		if (!isPainting.current) {
+		if (!isPainting.current || !_.includes(paintingTypes, toolsType)) {
 			return;
 		}
 
@@ -100,9 +130,13 @@ const Markers = () => {
 				},
 			},
 		});
-	}, []);
+	}, [toolsType, markersType]);
 
 	const exitPaint = useCallback(event => {
+		if (!_.includes(paintingTypes, toolsType)) {
+			return;
+		}
+
 		console.log('exitPaint');
 
 		const coordinates = getCoordinates(markersRef.current, event);
@@ -114,7 +148,42 @@ const Markers = () => {
 		if (!markerId.current) {
 			return;
 		}
-	}, []);
+	}, [toolsType, markersType]);
+
+	const clickEvent = useCallback(event => {
+		if (!_.includes(clickTypes, toolsType)) {
+			return;
+		}
+
+		if (event.target !== markersRef.current) {
+			const markerNode = event.target.closest('[data-id]');
+			if (markerNode) {
+				const id = markerNode.getAttribute('data-id');
+				const type = markerNode.getAttribute('data-type');
+				setSelectedMarkerAction({ id: _.toNumber(id) });
+				markerNode.focus();
+			}
+		} else {
+			if (document.activeElement) {
+				document.activeElement.blur();
+			}
+
+			if (markers.selected) {
+				setSelectedMarkerAction({ id: null });
+			} else {
+				markerId.current = new Date().getTime();
+				const coordinates = getCoordinates(markersRef.current, event);
+				if (coordinates) {
+					addMarkerAction({
+						id: markerId.current,
+						type: markersType,
+						coordinates,
+						style: toolsAttributes,
+					});
+				}
+			}	
+		}
+	}, [toolsType, markersType, markers, toolsAttributes]);
 
 	useEffect(() => {
 		if (!markersRef.current) {
@@ -132,10 +201,21 @@ const Markers = () => {
 			markersRef.current.removeEventListener('mouseup', exitPaint);
 			markersRef.current.removeEventListener('mouseleave', exitPaint);
 		};
-	}, []);
+	}, [toolsType, markersType, toolsAttributes]);
+
+	useEffect(() => {
+		if (!markersRef.current) {
+			return;
+		}
+
+		markersRef.current.addEventListener('click', clickEvent);
+		return () => {
+			markersRef.current.removeEventListener('click', clickEvent);
+		};
+	}, [toolsType, markersType, markers, toolsAttributes]);
 
 	return (
-		<div className={style.markers}>
+		<div className={style.markers} contentEditable={_.includes(clickTypes, toolsType)}>
 			<SVG
 				id="markers"
 				width={editor.width}
