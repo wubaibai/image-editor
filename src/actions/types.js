@@ -6,6 +6,7 @@ export const SET_EDITOR_SIZE = 'SET_EDITOR_SIZE';
 
 // tools
 export const SET_SELECTED_TOOL = 'SET_SELECTED_TOOL';
+export const SET_ATTRIBUTE = 'SET_ATTRIBUTE';
 
 // markers
 export const ADD_MARKER = 'ADD_MARKER';

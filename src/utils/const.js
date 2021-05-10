@@ -6,7 +6,8 @@ export const TOOLS = {
     SIZER: 'sizer',
 };
 
-export const SHAPES = {
+export const MARKERS = {
     RECTANGLE: 'rectangle',
     CIRCLE: 'cirscle',
+    TEXT: 'text',
 };
