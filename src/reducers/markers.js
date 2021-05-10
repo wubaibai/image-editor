@@ -1,12 +1,10 @@
 import produce from 'immer';
 import _ from 'lodash';
 
-import { ADD_MARKER, UPDATE_MARKER } from 'actions/types';
+import { ADD_MARKER, UPDATE_MARKER, SET_SELECTED_MARKER } from 'actions/types';
 
 const initialState = {
-	seleted: {
-		id: undefined,
-	},
+	selected: null,
 	// each markers' id
 	list: [],
 	// each markers' data
@@ -19,10 +17,15 @@ const markersReducer = (state = initialState, action) => {
 			return produce(state, draft => {
 				draft.list.push(action.payload.id);
 				draft.data[action.payload.id] = action.payload.data;
+				draft.selected = action.payload.id;
 			});
 		case UPDATE_MARKER:
 			return produce(state, draft => {
 				draft.data[action.payload.id] = _.merge(draft.data[action.payload.id], action.payload.data);
+			});
+		case SET_SELECTED_MARKER:
+			return produce(state, draft => {
+				draft.selected = action.payload.id;
 			});
 		default:
 			return state;
