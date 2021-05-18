@@ -91,7 +91,7 @@ const Markers = () => {
 	const clickTypes = ['text'];
 	const dragTypes = ['move'];
 
-	const mouseDown = useCallback(event => {
+	const mouseDown = event => {
 		if (!_.includes(paintingTypes, toolsType) && !_.includes(dragTypes, toolsType)) {
 			return;
 		}
@@ -123,9 +123,9 @@ const Markers = () => {
 				style: toolsAttributes,
 			});
 		}
-	}, [toolsType, markersType, toolsAttributes]);
+	};
 
-	const mouseMove = useCallback(event => {
+	const mouseMove = event => {
 		if (!isMouseDown.current || (!_.includes(paintingTypes, toolsType) && !_.includes(dragTypes, toolsType))) {
 			return;
 		}
@@ -181,9 +181,9 @@ const Markers = () => {
 				},
 			},
 		});
-	}, [toolsType, markersType, markers]);
+	};
 
-	const mouseUpAndLeave = useCallback(event => {
+	const mouseUpAndLeave = event => {
 		if (!_.includes(paintingTypes, toolsType) && !_.includes(dragTypes, toolsType)) {
 			return;
 		}
@@ -199,9 +199,9 @@ const Markers = () => {
 		if (!markerId.current) {
 			return;
 		}
-	}, [toolsType, markersType]);
+	};
 
-	const clickEvent = useCallback(event => {
+	const clickEvent = event => {
 		if (!_.includes(clickTypes, toolsType)) {
 			return;
 		}
@@ -234,25 +234,24 @@ const Markers = () => {
 				}
 			}	
 		}
-	}, [toolsType, markersType, markers, toolsAttributes]);
+	};
 
 	useEffect(() => {
 		if (!markersRef.current) {
 			return;
 		}
 
-		const throttledPaint = _.throttle(mouseMove, 10);
 		markersRef.current.addEventListener('mousedown', mouseDown);
-		markersRef.current.addEventListener('mousemove', throttledPaint);
+		markersRef.current.addEventListener('mousemove', mouseMove);
 		markersRef.current.addEventListener('mouseup', mouseUpAndLeave);
 		markersRef.current.addEventListener('mouseleave', mouseUpAndLeave);
 		return () => {
 			markersRef.current.removeEventListener('mousedown', mouseDown);
-			markersRef.current.removeEventListener('mousemove', throttledPaint);
+			markersRef.current.removeEventListener('mousemove', mouseMove);
 			markersRef.current.removeEventListener('mouseup', mouseUpAndLeave);
 			markersRef.current.removeEventListener('mouseleave', mouseUpAndLeave);
 		};
-	}, [toolsType, markersType, toolsAttributes, markers]);
+	}, [toolsType, markersType, markers, toolsAttributes]);
 
 	useEffect(() => {
 		if (!markersRef.current) {
