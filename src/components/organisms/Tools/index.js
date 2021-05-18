@@ -5,6 +5,7 @@ import TextFieldsIcon from '@material-ui/icons/TextFields';
 import ArrowRightAltIcon from '@material-ui/icons/ArrowRightAlt';
 import BrushIcon from '@material-ui/icons/Brush';
 import CropIcon from '@material-ui/icons/Crop';
+import OpenWithIcon from '@material-ui/icons/OpenWith';
 import FormatColorFillIcon from '@material-ui/icons/FormatColorFill';
 import BorderColorIcon from '@material-ui/icons/BorderColor';
 import FormatColorTextIcon from '@material-ui/icons/FormatColorText';
@@ -17,6 +18,7 @@ import { setSelectedTool, setAttribute } from 'actions/tools';
 import style from './index.css';
 
 const settings = {
+	move: <OpenWithIcon />,
 	arrow: <ArrowRightAltIcon />,
 	shape: <CropSquareIcon />,
 	text: <TextFieldsIcon />,

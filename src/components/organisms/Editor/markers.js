@@ -1,10 +1,10 @@
-import React, { useRef, useEffect, useCallback, useMemo } from 'react';
+import React, { useRef, useEffect, useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import _ from 'lodash';
 
 import SVG, { Rect, Text, Boundary } from 'components/atoms/SVG';
-import { MARKERS } from 'utils/const';
-import { addMarker, updateMarker, setSelectedMarker } from 'actions/markers';
+import { MARKERS, TOOLS } from 'utils/const';
+import { addMarker, updateMarker, setSelectedMarker, setDragStart } from 'actions/markers';
 import useRedux from 'utils/hooks/useRedux';
 import style from './index.css';
 
@@ -21,7 +21,7 @@ const getCoordinates = (element, event) => {
 	};
 };
 
-const renderMarkers = (markers) => {
+const renderMarkers = (markers, toolsType) => {
 	if (_.isEmpty(markers.list)) {
 		return null;
 	}
@@ -33,6 +33,7 @@ const renderMarkers = (markers) => {
 		if (mark.type === MARKERS.RECTANGLE) {
 			return (
 				<Rect
+					className={toolsType === TOOLS.MOVE && style.dragable}
 					key={id}
 					selected={id === selectedId}
 					height={mark.position.end.y - mark.position.start.y}
@@ -49,6 +50,7 @@ const renderMarkers = (markers) => {
 		} else if (mark.type === MARKERS.TEXT) {
 			return (
 				<Boundary
+					className={toolsType === TOOLS.MOVE && style.dragable}
 					key={id}
 					selected={id === selectedId}
 					x={mark.position.start.x}
@@ -77,28 +79,43 @@ const Markers = () => {
 	});
 	const [
 		{ markers, editor },
-		{ addMarker: addMarkerAction, updateMarker: updateMarkerAction, setSelectedMarker: setSelectedMarkerAction },
-	] = useRedux(mapHooksToState, { addMarker, updateMarker, setSelectedMarker });
-	const isPainting = useRef(false);
+		{ addMarker: addMarkerAction, updateMarker: updateMarkerAction, setSelectedMarker: setSelectedMarkerAction, setDragStart: setDragStartAction },
+	] = useRedux(mapHooksToState, { addMarker, updateMarker, setSelectedMarker, setDragStart });
+	const isMouseDown = useRef(false);
 	const markerId = useRef(undefined);
 	const markersRef = useRef();
 	const toolsType = useSelector(state => state.tools.selected);
 	const toolsAttributes = useSelector(state => state.tools.attributes);
-	const markersType = useSelector(state => state.tools.settings[state.tools.selected].selected)
+	const markersType = useSelector(state => state.tools.settings[state.tools.selected].selected);
 	const paintingTypes = ['shape'];
 	const clickTypes = ['text'];
+	const dragTypes = ['move'];
 
-	const startPaint = useCallback(event => {
-		if (!_.includes(paintingTypes, toolsType)) {
+	const mouseDown = useCallback(event => {
+		if (!_.includes(paintingTypes, toolsType) && !_.includes(dragTypes, toolsType)) {
 			return;
 		}
 
-		console.log('startPaint');
-		isPainting.current = true;
-
+		console.log('mouseDown');
+		isMouseDown.current = true;
 		markerId.current = new Date().getTime();
 		const coordinates = getCoordinates(markersRef.current, event);
 		if (coordinates) {
+			if (toolsType === TOOLS.MOVE) {
+				const markerNode = event.target.closest('[data-id]');
+				if (markerNode) {
+					const id = markerNode.getAttribute('data-id');
+					setSelectedMarkerAction({ id: _.toNumber(id) });
+					markerId.current = _.toNumber(id);
+
+					setDragStartAction(coordinates);
+				} else {
+					setSelectedMarkerAction({ id: null });
+				}
+
+				return;
+			}
+			
 			addMarkerAction({
 				id: markerId.current,
 				type: markersType,
@@ -108,13 +125,47 @@ const Markers = () => {
 		}
 	}, [toolsType, markersType, toolsAttributes]);
 
-	const paint = useCallback(event => {
-		if (!isPainting.current || !_.includes(paintingTypes, toolsType)) {
+	const mouseMove = useCallback(event => {
+		if (!isMouseDown.current || (!_.includes(paintingTypes, toolsType) && !_.includes(dragTypes, toolsType))) {
 			return;
 		}
 
 		const coordinates = getCoordinates(markersRef.current, event);
 		if (!coordinates) {
+			return;
+		}
+
+		if (toolsType === TOOLS.MOVE) {
+			const markerNode = event.target.closest('[data-id]');
+			if (markerNode) {
+				const id = markerNode.getAttribute('data-id');
+				const obj = markers.data[id];
+				const { x: xDragStart, y: yDragStart } = markers.dragStart;
+				const { x: xDragEnd, y: yDragEnd } = coordinates;
+				const xDelta = xDragEnd - xDragStart;
+				const yDelta = yDragEnd - yDragStart;
+				updateMarkerAction({
+					id: markerId.current,
+					data: {
+						position: {
+							start: {
+								x: obj.position.start.x + xDelta,
+								y: obj.position.start.y + yDelta,
+							},
+							end: {
+								x: obj.position.end.x + xDelta,
+								y: obj.position.end.y + yDelta,
+							}
+						},
+					},
+				});
+
+				setDragStartAction({
+					x: xDragEnd,
+					y: yDragEnd,
+				});
+			}
+
 			return;
 		}
 
@@ -130,21 +181,21 @@ const Markers = () => {
 				},
 			},
 		});
-	}, [toolsType, markersType]);
+	}, [toolsType, markersType, markers]);
 
-	const exitPaint = useCallback(event => {
-		if (!_.includes(paintingTypes, toolsType)) {
+	const mouseUpAndLeave = useCallback(event => {
+		if (!_.includes(paintingTypes, toolsType) && !_.includes(dragTypes, toolsType)) {
 			return;
 		}
 
-		console.log('exitPaint');
+		console.log('mouseUpAndLeave');
 
 		const coordinates = getCoordinates(markersRef.current, event);
 		if (!coordinates) {
 			return;
 		}
 
-		isPainting.current = false;
+		isMouseDown.current = false;
 		if (!markerId.current) {
 			return;
 		}
@@ -190,18 +241,18 @@ const Markers = () => {
 			return;
 		}
 
-		const throttledPaint = _.throttle(paint, 100);
-		markersRef.current.addEventListener('mousedown', startPaint);
+		const throttledPaint = _.throttle(mouseMove, 10);
+		markersRef.current.addEventListener('mousedown', mouseDown);
 		markersRef.current.addEventListener('mousemove', throttledPaint);
-		markersRef.current.addEventListener('mouseup', exitPaint);
-		markersRef.current.addEventListener('mouseleave', exitPaint);
+		markersRef.current.addEventListener('mouseup', mouseUpAndLeave);
+		markersRef.current.addEventListener('mouseleave', mouseUpAndLeave);
 		return () => {
-			markersRef.current.removeEventListener('mousedown', startPaint);
+			markersRef.current.removeEventListener('mousedown', mouseDown);
 			markersRef.current.removeEventListener('mousemove', throttledPaint);
-			markersRef.current.removeEventListener('mouseup', exitPaint);
-			markersRef.current.removeEventListener('mouseleave', exitPaint);
+			markersRef.current.removeEventListener('mouseup', mouseUpAndLeave);
+			markersRef.current.removeEventListener('mouseleave', mouseUpAndLeave);
 		};
-	}, [toolsType, markersType, toolsAttributes]);
+	}, [toolsType, markersType, toolsAttributes, markers]);
 
 	useEffect(() => {
 		if (!markersRef.current) {
@@ -222,7 +273,7 @@ const Markers = () => {
 				height={editor.height}
 				ref={markersRef}
 			>
-				{renderMarkers(markers)}
+				{renderMarkers(markers, toolsType)}
 			</SVG>
 		</div>
 	);

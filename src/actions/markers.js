@@ -1,4 +1,4 @@
-import { ADD_MARKER, UPDATE_MARKER, SET_SELECTED_MARKER } from './types';
+import { ADD_MARKER, UPDATE_MARKER, SET_SELECTED_MARKER, SET_DRAG_START } from './types';
 
 export const addMarker = ({ id, type, style, coordinates }) => {
 	return {
@@ -38,6 +38,16 @@ export const setSelectedMarker = ({ id }) => {
 		type: SET_SELECTED_MARKER,
 		payload: {
 			id,
+		},
+	};
+};
+
+export const setDragStart = ({ x, y }) => {
+	return {
+		type: SET_DRAG_START,
+		payload: {
+			x,
+			y,
 		},
 	};
 };

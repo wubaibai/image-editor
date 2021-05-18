@@ -35,6 +35,7 @@ export const Boundary = props => {
 
 	return (
 		<g
+			className={props.className}
 			transform={`translate(${props.x},${props.y})`}
 			onClick={props.onClick}
 			data-id={props['data-id']}

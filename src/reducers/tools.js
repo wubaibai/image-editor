@@ -4,6 +4,7 @@ import { MARKERS, TOOLS } from 'utils/const';
 const initialState = {
 	selected: TOOLS.TEXT,
 	settings: {
+		[TOOLS.MOVE]: {},
 		[TOOLS.ARROW]: {},
 		[TOOLS.SHAPE]: {
 			selected: MARKERS.RECTANGLE,

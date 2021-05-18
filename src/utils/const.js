@@ -1,4 +1,5 @@
 export const TOOLS = {
+    MOVE: 'move',
     ARROW: 'arrow',
     SHAPE: 'shape',
     TEXT: 'text',

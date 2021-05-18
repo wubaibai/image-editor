@@ -19,3 +19,15 @@
 	top: 0;
 	left: 0;
 }
+
+.markers > svg > .dragable:hover {
+	cursor: move;
+}
+
+.markers > svg text {
+    pointer-events: none;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}

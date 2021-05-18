@@ -12,3 +12,4 @@ export const SET_ATTRIBUTE = 'SET_ATTRIBUTE';
 export const ADD_MARKER = 'ADD_MARKER';
 export const UPDATE_MARKER = 'UPDATE_MARKER';
 export const SET_SELECTED_MARKER = 'SET_SELECTED_MARKER';
+export const SET_DRAG_START = 'SET_DRAG_START';

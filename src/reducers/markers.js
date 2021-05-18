@@ -1,7 +1,7 @@
 import produce from 'immer';
 import _ from 'lodash';
 
-import { ADD_MARKER, UPDATE_MARKER, SET_SELECTED_MARKER } from 'actions/types';
+import { ADD_MARKER, UPDATE_MARKER, SET_SELECTED_MARKER, SET_DRAG_START } from 'actions/types';
 
 const initialState = {
 	selected: null,
@@ -9,6 +9,11 @@ const initialState = {
 	list: [],
 	// each markers' data
 	data: {},
+	// drag information
+	dragStart: {
+		x: null,
+		y: null,
+	},
 };
 
 const markersReducer = (state = initialState, action) => {
@@ -26,6 +31,11 @@ const markersReducer = (state = initialState, action) => {
 		case SET_SELECTED_MARKER:
 			return produce(state, draft => {
 				draft.selected = action.payload.id;
+			});
+		case SET_DRAG_START:
+			return produce(state, draft => {
+				draft.dragStart.x = action.payload.x;
+				draft.dragStart.y = action.payload.y;
 			});
 		default:
 			return state;
